@@ -94,7 +94,6 @@ function Home() {
     .catch((err) => console.error("Error deleting blog:", err));
 };
 
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-4 sm:p-6 md:p-8">
       <div className="max-w-7xl mx-auto">
