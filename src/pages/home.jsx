@@ -65,7 +65,7 @@ function Home() {
 
   //  Fetch blogs from backend, getting syntax error here but not sure why, ive checked my code multiple times already
   useEffect(() => {
-    fetch("http://localhost:4000/api/blogs")    
+    fetch("/api/blogs")    
       .then((res) => res.json())
       .then((data) => setBlogs(data))
       .catch((err) => console.error("Error fetching blogs:", err));
@@ -82,7 +82,7 @@ function Home() {
   );
   if (!confirmDelete) return;
 
-  fetch(`http://localhost:4000/api/blogs/${id}`, {
+  fetch(`api/blogs/${id}`, {
     method: "DELETE",
   })
     .then((res) => res.json())
