@@ -11,65 +11,88 @@ import { useNavigate } from "react-router-dom";
 
 function Home() {
   const navigate = useNavigate();
+  const [blogs, setBlogs] = useState([])
 
-  const [blogs, setBlogs] = useState([
-    {
-      id: 1,
-      blogName: "Fashion",
-      image: Fashionblog,
-      author: "Alice",
-      date: "2025-07-01",
-      category: "Lifestyle",
-      content: "Latest fashion trends for 2025.",
-    },
-    {
-      id: 2,
-      blogName: "Dev",
-      image: Softwareblog,
-      author: "Bob",
-      date: "2025-06-15",
-      category: "Technology",
-      content: "Exploring the newest in software development.",
-    },
-    {
-      id: 3,
-      blogName: "Food",
-      image: Foodblog,
-      author: "Charlie",
-      date: "2025-05-10",
-      category: "Food",
-      content: "Delicious recipes from around the world.",
-    },
-    {
-      id: 4,
-      blogName: "Cars",
-      image: Carblog,
-      author: "Dana",
-      date: "2025-04-20",
-      category: "Cars",
-      content: "Reviewing the latest car models.",
-    },
-    {
-      id: 5,
-      blogName: "iPhone",
-      image: iPhoneblog,
-      author: "Eve",
-      date: "2025-03-01",
-      category: "iPhone",
-      content: "Everything about the newest iPhone.",
-    },
-  ]);
+  // const [blogs, setBlogs] = useState([
+  //   {
+  //     id: 1,
+  //     blogName: "Fashion",
+  //     image: Fashionblog,
+  //     author: "Alice",
+  //     date: "2025-07-01",
+  //     category: "Lifestyle",
+  //     content: "Latest fashion trends for 2025.",
+  //   },
+  //   {
+  //     id: 2,
+  //     blogName: "Dev",
+  //     image: Softwareblog,
+  //     author: "Bob",
+  //     date: "2025-06-15",
+  //     category: "Technology",
+  //     content: "Exploring the newest in software development.",
+  //   },
+  //   {
+  //     id: 3,
+  //     blogName: "Food",
+  //     image: Foodblog,
+  //     author: "Charlie",
+  //     date: "2025-05-10",
+  //     category: "Food",
+  //     content: "Delicious recipes from around the world.",
+  //   },
+  //   {
+  //     id: 4,
+  //     blogName: "Cars",
+  //     image: Carblog,
+  //     author: "Dana",
+  //     date: "2025-04-20",
+  //     category: "Cars",
+  //     content: "Reviewing the latest car models.",
+  //   },
+  //   {
+  //     id: 5,
+  //     blogName: "iPhone",
+  //     image: iPhoneblog,
+  //     author: "Eve",
+  //     date: "2025-03-01",
+  //     category: "iPhone",
+  //     content: "Everything about the newest iPhone.",
+  //   },
+  // ]);
 
   const [selectedBlog, setSelectedBlog] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(null);
 
   //  Fetch blogs from backend, getting syntax error here but not sure why, ive checked my code multiple times already
   useEffect(() => {
-    fetch("/api/blogs")    
-      .then((res) => res.json())
-      .then((data) => setBlogs(data))
-      .catch((err) => console.error("Error fetching blogs:", err));
+    const myBlogs = async () => {
+try {
+
+      const response = await axios.get('/api/blogs')
+      const blogs = response.data  
+      console.log(response)
+    } catch (error) {
+      
+    }
+    }
+    axios({
+  method: 'get',
+  url: 'https://blogs/',
+  responseType: 'stream'
+})
+  .then(function (response) {
+    console.log(response.data);
+  });
+    
+    // fetch("/api/blogs")    
+    //   .then((res) => res.json())
+    //   .then((data) => setBlogs(data))
+    //   .catch((err) => console.error("Error fetching blogs:", err));
+    //   console.log()
   }, []);
+
+  console.log(blogs)
 
   const imageClick = (blog, id) => {
     setSelectedBlog(blog);

@@ -86,8 +86,8 @@ function EditPost() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-4 sm:p-6 md:p-8">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 px-4 py-6 sm:px-6 md:px-8">
+     <div className="w-full max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto">
         <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8">
           <div className="mb-6 text-center">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">
