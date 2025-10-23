@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Carblog,
   Fashionblog,
@@ -17,7 +17,7 @@ function Home() {
   //   {
   //     id: 1,
   //     blogName: "Fashion",
-  //     image: Fashionblog,
+  //     image: Fashionblog,     
   //     author: "Alice",
   //     date: "2025-07-01",
   //     category: "Lifestyle",
@@ -67,32 +67,19 @@ function Home() {
   //  Fetch blogs from backend, getting syntax error here but not sure why, ive checked my code multiple times already
   useEffect(() => {
     const myBlogs = async () => {
-try {
-
-      const response = await axios.get('/api/blogs')
-      const blogs = response.data  
-      console.log(response)
-    } catch (error) {
-      
+      try {
+        const response = await axios.get('http://localhost:4000/api/blogs')
+        setBlogs(response.data)
+        console.log(response.data)
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      }
     }
-    }
-    axios({
-  method: 'get',
-  url: 'https://blogs/',
-  responseType: 'stream'
-})
-  .then(function (response) {
-    console.log(response.data);
-  });
-    
-    // fetch("/api/blogs")    
-    //   .then((res) => res.json())
-    //   .then((data) => setBlogs(data))
-    //   .catch((err) => console.error("Error fetching blogs:", err));
-    //   console.log()
-  }, []);
+  myBlogs()
 
-  console.log(blogs)
+  }, [])
+
+  // console.log(blogs)
 
   const imageClick = (blog, id) => {
     setSelectedBlog(blog);
@@ -155,7 +142,7 @@ try {
                 >
                   <div className="relative overflow-hidden rounded-lg mb-4 aspect-video">
                     <img
-                      src={blog.image}
+                      src={`http://localhost:4000${blog.image}`}
                       alt={blog.blogName}
                       className="w-full h-full object-cover"
                     />

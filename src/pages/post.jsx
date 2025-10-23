@@ -57,9 +57,10 @@ function EditPost() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
     blogName: "",
+    category: "",
+    image: null,
     author: "",
     date: "",
-    category: "",
     content: "",
   });
 

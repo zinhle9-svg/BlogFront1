@@ -1,3 +1,4 @@
+// import { upload } from "@testing-library/user-event/dist/upload";
 import React, { useState } from "react";
 
 function Create({ selectedPostId }) {
@@ -5,9 +6,15 @@ function Create({ selectedPostId }) {
   const [formData, setFormData] = useState({
     blogName: "",
     category: "",
-    publicationDate: "",
+    image: null,
     author: "",
+    date: "",
+    content: "",
   });
+  // const imageuploadhandler = { 
+  //   <div> action="/action_page.php"
+  //   </div>  
+  // }
 
   const handleChange = (e) => {
     setFormData({
@@ -124,8 +131,23 @@ function Create({ selectedPostId }) {
             </div>
           </div>
         </div>
+        {/* upload image */}
+        <form action="https://1drv.ms/f/c/3f765e97cfe38762/EmKH48-XXnYggD9oAAAAAAABQOPajTprXyOm854LbMyvNw?e=IDmFKj">
+  <input type="file" id="myFile" name="pictures"></input>
+  {/* <input type="submit"></input> */}
+</form>
 
-        {/* Publication Date */}
+    {/* date */}
+        <div className="flex flex-col relative group">
+          <label
+            htmlFor="publicationDate"
+            className="mb-2 font-medium text-gray-700 group-hover:text-purple-600 transition-colors duration-200"
+          >
+            Publication Date
+              </label>
+        </div>
+
+    {/* date */}
         <div className="flex flex-col relative group">
           <label
             htmlFor="publicationDate"
