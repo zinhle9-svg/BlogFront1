@@ -13,7 +13,7 @@ function NavBar() {
               className="hover:text-purple-200 font-semibold transition-all duration-200 flex items-center space-x-1 px-3 py-1 rounded-lg hover:bg-purple-500"
             >
               <svg
-                xmlns="http://www.w3.org/2000/svg"
+    
                 className="h-5 w-5"
                 viewBox="0 0 20 20"
                 fill="currentColor"
@@ -29,7 +29,7 @@ function NavBar() {
               className="hover:text-purple-200 font-semibold transition-all duration-200 flex items-center space-x-1 px-3 py-1 rounded-lg hover:bg-purple-500"
             >
               <svg
-                xmlns="http://www.w3.org/2000/svg"
+              
                 className="h-5 w-5"
                 viewBox="0 0 20 20"
                 fill="currentColor"
