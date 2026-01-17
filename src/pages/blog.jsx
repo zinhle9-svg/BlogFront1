@@ -26,25 +26,73 @@ function Create({ selectedPostId }) {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
 
-    const data = new FormData();
-    data.append("blogName", formData.blogName);
-    data.append("category", formData.category);
-    data.append("author", formData.author);
-    data.append("publicationDate", formData.publicationDate);
-    data.append("content", formData.content);
+  //   const data = new FormData();
+  //   data.append("blogName", formData.blogName);
+  //   data.append("category", formData.category);
+  //   data.append("author", formData.author);
+  //   data.append("publicationDate", formData.publicationDate);
+  //   data.append("content", formData.content);
+  //   data.append("image", formData.image);
+
+  //   if (selectedPostId) {
+  //    alert("Blog post updated successfully!");
+  //     // PUT /api/blogs/:id
+  //   } else {
+  //     console.log("Creating post:", formData);
+  //     // POST /api/blogs
+  //   }
+  // };
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const data = new FormData();
+  data.append("blogName", formData.blogName);
+  data.append("category", formData.category);
+  data.append("author", formData.author);
+  data.append("publicationDate", formData.publicationDate);
+  data.append("content", formData.content);
+
+  if (formData.image) {
     data.append("image", formData.image);
+  }
 
+  try {
     if (selectedPostId) {
-      console.log("Updating post:", selectedPostId, formData);
-      // PUT /api/blogs/:id
+      // UPDATE
+      const response = await fetch(
+        `http://localhost:4000/api/blogs/${selectedPostId}`,
+        {
+          method: "PUT",
+          body: data,
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to update post");
+
+      alert("Blog post updated successfully!");
     } else {
-      console.log("Creating post:", formData);
-      // POST /api/blogs
+      // CREATE
+      const response = await fetch(
+        "http://localhost:4000/api/blogs",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to create post");
+
+      alert("New blog created successfully!");
     }
-  };
+  } catch (error) {
+    console.error(error);
+    alert("Something went wrong!");
+  }
+};
+
 
   const handleDelete = () => {
     console.log("Deleting post:", selectedPostId);
@@ -137,8 +185,10 @@ function Create({ selectedPostId }) {
           <button
             type="submit"
             className="flex-1 bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700"
+          
           >
             {selectedPostId ? "Update Post" : "Create Post"}
+
           </button>
 
           {selectedPostId && (

@@ -9,6 +9,8 @@ import {
   Softwareblog,
 } from "../assets";
 
+
+
 const dummyBlogs = [
   {
     blogName: "Fashion",
@@ -53,6 +55,7 @@ const dummyBlogs = [
 ];
 
 function EditPost() {
+  const [blog, setBlog] = useState([]);
   const { id } = useParams(); // Expecting `id` to be the index of the blog
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -79,12 +82,19 @@ function EditPost() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log("Updated blog post:", form);
+  //   // Ideally send the updated data to the backend or global store here
+  //   navigate("/");
+  // };
   const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Updated blog post:", form);
-    // Ideally send the updated data to the backend or global store here
-    navigate("/");
-  };
+  e.preventDefault();
+
+  setBlog(prevBlogs => [...prevBlogs, form]); 
+  navigate("/");
+};
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 px-4 py-6 sm:px-6 md:px-8">
