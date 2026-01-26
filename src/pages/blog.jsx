@@ -47,7 +47,7 @@ function Create({ selectedPostId }) {
   // };
   const handleSubmit = async (e) => {
   e.preventDefault();
-
+console.log("Form Data:", formData);
   const data = new FormData();
   data.append("blogName", formData.blogName);
   data.append("category", formData.category);
@@ -74,17 +74,21 @@ function Create({ selectedPostId }) {
 
       alert("Blog post updated successfully!");
     } else {
+      console.log("Creating post:", data);
       // CREATE
       const response = await fetch(
         "http://localhost:4000/api/blogs",
         {
           method: "POST",
-          body: data,
+          body: JSON.stringify(formData),
+          headers: {
+            "Content-Type": " application/json",
+          },
         }
       );
 
       if (!response.ok) throw new Error("Failed to create post");
-
+console.log("Response:", response);
       alert("New blog created successfully!");
     }
   } catch (error) {
