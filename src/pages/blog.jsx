@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 
 function Create({ selectedPostId }) {
+  const [image, setImage] = useState({
+    preview: '',
+    raw: '',
+  });
   const [formData, setFormData] = useState({
     blogName: "",
     category: "",
@@ -26,25 +30,14 @@ function Create({ selectedPostId }) {
     });
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
+    <input
+          name="image"
+          type="file"
+          id="upload-button"
+          style={{ display: 'none' }}
+          onChange={handleImageChange}
+        />
 
-  //   const data = new FormData();
-  //   data.append("blogName", formData.blogName);
-  //   data.append("category", formData.category);
-  //   data.append("author", formData.author);
-  //   data.append("publicationDate", formData.publicationDate);
-  //   data.append("content", formData.content);
-  //   data.append("image", formData.image);
-
-  //   if (selectedPostId) {
-  //    alert("Blog post updated successfully!");
-  //     // PUT /api/blogs/:id
-  //   } else {
-  //     console.log("Creating post:", formData);
-  //     // POST /api/blogs
-  //   }
-  // };
   const handleSubmit = async (e) => {
   e.preventDefault();
 console.log("Form Data:", formData);
