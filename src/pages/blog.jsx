@@ -29,9 +29,10 @@ function Create({ selectedPostId }) {
       image: e.target.files[0],
     });
   };
+// file input, matching the name of the file on the backend
 
     <input
-          name="image"
+          name="pic1"
           type="file"
           id="upload-button"
           style={{ display: 'none' }}
@@ -40,55 +41,49 @@ function Create({ selectedPostId }) {
 
   const handleSubmit = async (e) => {
   e.preventDefault();
-console.log("Form Data:", formData);
+
   const data = new FormData();
+
   data.append("blogName", formData.blogName);
   data.append("category", formData.category);
   data.append("author", formData.author);
-  data.append("publicationDate", formData.publicationDate);
+  data.append("publicationDate", formData.date);
   data.append("content", formData.content);
 
   if (formData.image) {
-    data.append("image", formData.image);
+    data.append("pic1", formData.image); // MUST match multer
   }
 
   try {
+    let response;
+
     if (selectedPostId) {
-      // UPDATE
-      const response = await fetch(
+      response = await fetch(
         `http://localhost:4000/api/blogs/${selectedPostId}`,
         {
           method: "PUT",
           body: data,
         }
       );
-
-      if (!response.ok) throw new Error("Failed to update post");
-
-      alert("Blog post updated successfully!");
     } else {
-      console.log("Creating post:", data);
-      // CREATE
-      const response = await fetch(
+      response = await fetch(
         "http://localhost:4000/api/blogs",
         {
           method: "POST",
-          body: JSON.stringify(formData),
-          headers: {
-            "Content-Type": " application/json",
-          },
+          body: data,
         }
       );
-
-      if (!response.ok) throw new Error("Failed to create post");
-console.log("Response:", response);
-      alert("New blog created successfully!");
     }
+
+    if (!response.ok) throw new Error("Request failed");
+
+    alert(selectedPostId ? "Blog updated!" : "Blog created!");
   } catch (error) {
     console.error(error);
     alert("Something went wrong!");
   }
 };
+
 
 
   const handleDelete = () => {
