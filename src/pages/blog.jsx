@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 
 function Create({ selectedPostId }) {
+
   const [image, setImage] = useState({
-    preview: '',
-    raw: '',
+    preview: "",
+    raw: "",
   });
+
   const [formData, setFormData] = useState({
     blogName: "",
     category: "",
@@ -14,7 +16,7 @@ function Create({ selectedPostId }) {
     content: "",
   });
 
-  // Handle text, select & date inputs
+  // handle text inputs
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -22,73 +24,69 @@ function Create({ selectedPostId }) {
     });
   };
 
-  // Handle image upload
+  // handle image upload
   const handleImageChange = (e) => {
-    setFormData({
-      ...formData,
-      image: e.target.files[0],
-    });
-  };
-// file input, matching the name of the file on the backend
+    if (e.target.files.length) {
+      setImage({
+        preview: URL.createObjectURL(e.target.files[0]),
+        raw: e.target.files[0],
+      });
 
-    <input
-          name="pic1"
-          type="file"
-          id="upload-button"
-          style={{ display: 'none' }}
-          onChange={handleImageChange}
-        />
-
-  const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  const data = new FormData();
-
-  data.append("blogName", formData.blogName);
-  data.append("category", formData.category);
-  data.append("author", formData.author);
-  data.append("publicationDate", formData.date);
-  data.append("content", formData.content);
-
-  if (formData.image) {
-    data.append("pic1", formData.image); // MUST match multer
-  }
-
-  try {
-    let response;
-
-    if (selectedPostId) {
-      response = await fetch(
-        `http://localhost:4000/api/blogs/${selectedPostId}`,
-        {
-          method: "PUT",
-          body: data,
-        }
-      );
-    } else {
-      response = await fetch(
-        "http://localhost:4000/api/blogs",
-        {
-          method: "POST",
-          body: data,
-        }
-      );
+      setFormData({
+        ...formData,
+        image: e.target.files[0],
+      });
     }
+  };
 
-    if (!response.ok) throw new Error("Request failed");
+  // submit form
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    alert(selectedPostId ? "Blog updated!" : "Blog created!");
-  } catch (error) {
-    console.error(error);
-    alert("Something went wrong!");
-  }
-};
+    console.log("Form Data:", formData);
 
+    try {
+      if (selectedPostId) {
+        // UPDATE
+        const response = await fetch(
+          `http://localhost:4000/api/blogs/${selectedPostId}`,
+          {
+            method: "PUT",
+            body: JSON.stringify(formData),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
+        if (!response.ok) throw new Error("Failed to update post");
+
+        alert("Blog post updated successfully!");
+      } else {
+        // CREATE
+        const response = await fetch(
+          "http://localhost:4000/api/blogs",
+          {
+            method: "POST",
+            body: JSON.stringify(formData),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) throw new Error("Failed to create post");
+
+        alert("New blog created successfully!");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong!");
+    }
+  };
 
   const handleDelete = () => {
     console.log("Deleting post:", selectedPostId);
-    // DELETE /api/blogs/:id
   };
 
   return (
@@ -131,13 +129,21 @@ function Create({ selectedPostId }) {
         {/* Image Upload */}
         <div>
           <label className="block mb-2 text-gray-700">Upload Image</label>
+
           <input
             type="file"
             accept="image/*"
             onChange={handleImageChange}
             className="w-full p-3 border rounded-lg"
-            required={!selectedPostId}
           />
+
+          {image.preview && (
+            <img
+              src={image.preview}
+              alt="preview"
+              className="mt-3 rounded-lg"
+            />
+          )}
         </div>
 
         {/* Date */}
@@ -177,10 +183,8 @@ function Create({ selectedPostId }) {
           <button
             type="submit"
             className="flex-1 bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700"
-          
           >
             {selectedPostId ? "Update Post" : "Create Post"}
-
           </button>
 
           {selectedPostId && (
