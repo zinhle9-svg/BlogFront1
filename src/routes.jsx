@@ -3,7 +3,7 @@ import Nav from "./pages/nav";
 import Create from "./pages/blog";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import EditPost from "./pages/post";
-import FileUpload from "./pages/upload";
+
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
           <Route path="/homePage" element={<Home />} />
           <Route path="/createBlog" element={<Create />} />
           <Route path="/edit/:id" element={<EditPost />} />
-          <Route path="/upload" element={<FileUpload />} />
+          
         </Routes>
       </div>
     </Router>

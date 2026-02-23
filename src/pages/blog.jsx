@@ -41,49 +41,39 @@ function Create({ selectedPostId }) {
 
   // submit form
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    console.log("Form Data:", formData);
+  const data = new FormData();
+  data.append("blogName", formData.blogName);
+  data.append("category", formData.category);
+  data.append("author", formData.author);
+  data.append("publicationDate", formData.publicationDate);
+  data.append("content", formData.content);
+  if (formData.image) {
+    data.append("file", formData.image); // "file" must match upload.single('file') in backend
+  }
 
-    try {
-      if (selectedPostId) {
-        // UPDATE
-        const response = await fetch(
-          `http://localhost:4000/api/blogs/${selectedPostId}`,
-          {
-            method: "PUT",
-            body: JSON.stringify(formData),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (!response.ok) throw new Error("Failed to update post");
-
-        alert("Blog post updated successfully!");
-      } else {
-        // CREATE
-        const response = await fetch(
-          "http://localhost:4000/api/blogs",
-          {
-            method: "POST",
-            body: JSON.stringify(formData),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (!response.ok) throw new Error("Failed to create post");
-
-        alert("New blog created successfully!");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong!");
+  try {
+    if (selectedPostId) {
+      const response = await fetch(`http://localhost:4000/api/blogs/${selectedPostId}`, {
+        method: "PUT",
+        body: data, // no Content-Type header — let the browser set it automatically
+      });
+      if (!response.ok) throw new Error("Failed to update post");
+      alert("Blog post updated successfully!");
+    } else {
+      const response = await fetch("http://localhost:4000/api/blogs/upload", {
+        method: "POST",
+        body: data, // no Content-Type header
+      });
+      if (!response.ok) throw new Error("Failed to create post");
+      alert("New blog created successfully!");
     }
-  };
+  } catch (error) {
+    console.error(error);
+    alert("Something went wrong!");
+  }
+};
 
   const handleDelete = () => {
     console.log("Deleting post:", selectedPostId);

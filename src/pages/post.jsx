@@ -1,62 +1,8 @@
-// EditPost.jsx
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Carblog,
-  Fashionblog,
-  Foodblog,
-  iPhoneblog,
-  Softwareblog,
-} from "../assets";
-
-
-
-const dummyBlogs = [
-  {
-    blogName: "Fashion",
-    image: Fashionblog,
-    author: "Alice",
-    date: "2025-07-01",
-    category: "Lifestyle",
-    content: "Latest fashion trends for 2025.",
-  },
-  {
-    blogName: "Dev",
-    image: Softwareblog,
-    author: "Bob",
-    date: "2025-06-15",
-    category: "Technology",
-    content: "Exploring the newest in software development.",
-  },
-  {
-    blogName: "Food",
-    image: Foodblog,
-    author: "Charlie",
-    date: "2025-05-10",
-    category: "Food",
-    content: "Delicious recipes from around the world.",
-  },
-  {
-    blogName: "Cars",
-    image: Carblog,
-    author: "Dana",
-    date: "2025-04-20",
-    category: "Cars",
-    content: "Reviewing the latest car models.",
-  },
-  {
-    blogName: "iPhone",
-    image: iPhoneblog,
-    author: "Eve",
-    date: "2025-03-01",
-    category: "iphone",
-    content: "Everything about the newest iPhone.",
-  },
-];
 
 function EditPost() {
-  const [blog, setBlog] = useState([]);
-  const { id } = useParams(); // Expecting `id` to be the index of the blog
+  const { id } = useParams();
   const navigate = useNavigate();
   const [form, setForm] = useState({
     blogName: "",
@@ -67,14 +13,22 @@ function EditPost() {
     content: "",
   });
 
+  // Fetch the blog from backend using the id
   useEffect(() => {
-    const blog = dummyBlogs[id];
-    if (blog) {
-      setForm(blog);
-    } else {
-      alert("Blog not found");
-      navigate("/");
-    }
+    const fetchBlog = async () => {
+      try {
+        const response = await fetch(`http://localhost:4000/api/blogs/${id}`);
+        if (!response.ok) throw new Error("Blog not found");
+        const data = await response.json();
+        setForm(data);
+      } catch (error) {
+        console.error(error);
+        alert("Blog not found");
+        navigate("/");
+      }
+    };
+
+    fetchBlog();
   }, [id, navigate]);
 
   const handleChange = (e) => {
@@ -82,102 +36,77 @@ function EditPost() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.log("Updated blog post:", form);
-  //   // Ideally send the updated data to the backend or global store here
-  //   navigate("/");
-  // };
-  const handleSubmit = (e) => {
-  e.preventDefault();
+  // Save changes to backend
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`http://localhost:4000/api/blogs/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
 
-  setBlog(prevBlogs => [...prevBlogs, form]); 
-  navigate("/");
-};
+      if (!response.ok) throw new Error("Failed to update blog");
 
+      alert("Blog updated successfully!");
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong!");
+    }
+  };
+
+  // Delete blog from backend
+  const handleDelete = async () => {
+    if (!window.confirm("Are you sure you want to delete this blog?")) return;
+    try {
+      const response = await fetch(`http://localhost:4000/api/blogs/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) throw new Error("Failed to delete blog");
+
+      alert("Blog deleted!");
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong!");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 px-4 py-6 sm:px-6 md:px-8">
-     <div className="w-full max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto">
+      <div className="w-full max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto">
         <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8">
           <div className="mb-6 text-center">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">
-              Edit Blog Post
-            </h2>
-            <p className="text-gray-600 mt-2">
-              Update your blog post details below
-            </p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">Edit Blog Post</h2>
+            <p className="text-gray-600 mt-2">Update your blog post details below</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">
-              {/* Blog Name */}
               <div className="flex flex-col">
-                <label
-                  className="mb-2 font-medium text-gray-700"
-                  htmlFor="blogName"
-                >
-                  Blog Name
-                </label>
-                <input
-                  id="blogName"
-                  name="blogName"
-                  value={form.blogName}
-                  onChange={handleChange}
-                  className="p-3 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all duration-200"
-                />
+                <label className="mb-2 font-medium text-gray-700">Blog Name</label>
+                <input name="blogName" value={form.blogName} onChange={handleChange}
+                  className="p-3 rounded-lg border border-gray-300 focus:border-purple-500 outline-none" />
               </div>
 
-              {/* Author */}
               <div className="flex flex-col">
-                <label
-                  className="mb-2 font-medium text-gray-700"
-                  htmlFor="author"
-                >
-                  Author
-                </label>
-                <input
-                  id="author"
-                  name="author"
-                  value={form.author}
-                  onChange={handleChange}
-                  className="p-3 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all duration-200"
-                />
+                <label className="mb-2 font-medium text-gray-700">Author</label>
+                <input name="author" value={form.author} onChange={handleChange}
+                  className="p-3 rounded-lg border border-gray-300 focus:border-purple-500 outline-none" />
               </div>
 
-              {/* Date */}
               <div className="flex flex-col">
-                <label
-                  className="mb-2 font-medium text-gray-700"
-                  htmlFor="date"
-                >
-                  Publication Date
-                </label>
-                <input
-                  id="date"
-                  type="date"
-                  name="date"
-                  value={form.date}
-                  onChange={handleChange}
-                  className="p-3 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all duration-200"
-                />
+                <label className="mb-2 font-medium text-gray-700">Publication Date</label>
+                <input type="date" name="publicationDate" value={form.publicationDate} onChange={handleChange}
+                  className="p-3 rounded-lg border border-gray-300 focus:border-purple-500 outline-none" />
               </div>
 
-              {/* Category */}
               <div className="flex flex-col">
-                <label
-                  className="mb-2 font-medium text-gray-700"
-                  htmlFor="category"
-                >
-                  Category
-                </label>
-                <select
-                  id="category"
-                  name="category"
-                  value={form.category}
-                  onChange={handleChange}
-                  className="p-3 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all duration-200"
-                >
+                <label className="mb-2 font-medium text-gray-700">Category</label>
+                <select name="category" value={form.category} onChange={handleChange}
+                  className="p-3 rounded-lg border border-gray-300 focus:border-purple-500 outline-none">
                   <option value="Lifestyle">Lifestyle</option>
                   <option value="Technology">Technology</option>
                   <option value="Food">Food</option>
@@ -186,37 +115,24 @@ function EditPost() {
                 </select>
               </div>
 
-              {/* Content */}
               <div className="flex flex-col">
-                <label
-                  className="mb-2 font-medium text-gray-700"
-                  htmlFor="content"
-                >
-                  Content
-                </label>
-                <textarea
-                  id="content"
-                  name="content"
-                  value={form.content}
-                  onChange={handleChange}
-                  rows="6"
-                  className="p-3 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all duration-200 resize-none"
-                />
+                <label className="mb-2 font-medium text-gray-700">Content</label>
+                <textarea name="content" value={form.content} onChange={handleChange} rows="6"
+                  className="p-3 rounded-lg border border-gray-300 focus:border-purple-500 outline-none resize-none" />
               </div>
             </div>
 
             <div className="flex space-x-4 pt-4">
-              <button
-                type="submit"
-                className="flex-1 bg-purple-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-purple-700 transform transition-all duration-200 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
-              >
+              <button type="submit"
+                className="flex-1 bg-purple-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-purple-700">
                 Save Changes
               </button>
-              <button
-                type="button"
-                onClick={() => navigate("/")}
-                className="flex-1 bg-gray-100 text-gray-700 font-semibold px-6 py-3 rounded-lg hover:bg-gray-200 transform transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-              >
+              <button type="button" onClick={handleDelete}
+                className="flex-1 bg-red-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-red-600">
+                Delete
+              </button>
+              <button type="button" onClick={() => navigate("/")}
+                className="flex-1 bg-gray-100 text-gray-700 font-semibold px-6 py-3 rounded-lg hover:bg-gray-200">
                 Cancel
               </button>
             </div>
