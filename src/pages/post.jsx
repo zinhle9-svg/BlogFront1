@@ -46,8 +46,9 @@ function EditPost() {
         body: JSON.stringify(form),
       });
 
-      if (!response.ok) throw new Error("Failed to update blog");
 
+      if (!response.ok) throw new Error("Failed to update blog");
+console.log(response);
       alert("Blog updated successfully!");
       navigate("/");
     } catch (error) {
